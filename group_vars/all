@@ -1,0 +1,19 @@
+ispmail_populate_test_data: true
+ispmail_mysql_mailuser_password: MUpassword
+ispmail_mysql_root_password: Rpassword
+ispmail_roundcube_password: RCpassword
+
+ispmail_dovecot_auth_mechanisms: plain login
+ispmail_postmaster_address: postmaster@krletron.me
+#ispmail_webmail_hostname: mail.krletron.me
+ispmail_webmail_hostname: 10.0.0.100
+
+ispmail_certificate_country: SR
+ispmail_certificate_state: Vojvodina
+ispmail_certificate_location: Novi Sad
+ispmail_certificate_organistation: krletron.me
+ispmail_certificate_orgunit: IT
+ispmail_certificate_domain:
+  - krletron.me
+ispmail_certificate_email: postmaster@krletron.me
+ispmail_certificate_days_valid: 3650
