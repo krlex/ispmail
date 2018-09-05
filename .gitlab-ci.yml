@@ -1,0 +1,4 @@
+image: debian/stretch64
+
+job1:
+  script: "ansible-playbook ispmail.yml -l localhost"
