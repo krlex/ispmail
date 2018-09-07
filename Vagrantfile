@@ -69,11 +69,11 @@ Vagrant.configure("2") do |config|
   # SHELL
    config.vm.provision "ansible" do |ansible|
      ansible.playbook = "ispmail.yml"
-     ansible.sudo = true
+     #ansible.sudo = true
      #ansible.verbose = 'vvv'
    end
 
-   config.vm.provision "virtualbox" do |vb|
+   config.vm.provider"virtualbox" do |vb|
      #config.vm.network "private_network", :true => 'dhcp', :name => 'vboxnet0', :adapter => 2
      config.vm.network "private_network", ip: "10.0.0.100"
    end
@@ -83,5 +83,4 @@ Vagrant.configure("2") do |config|
    config.vm.network "forwarded_port", guest: 110, host: 1110 # POP3
    config.vm.network "forwarded_port", guest: 25, host: 1025 # SMTP
    config.vm.network "forwarded_port", guest: 587, host: 1587 # Submission
-  end
 end
