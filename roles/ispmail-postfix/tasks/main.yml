@@ -1,4 +1,31 @@
 ---
 
 - name: define Postfix virtual mailbox domain mapping
-  template: src=mysql-virtual-mailbox-domain.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-domain.cf
+  template: src=mysql-virtual-mailbox-domains.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-domains.cf
+  notify: restart postfix
+
+- name: tell Postfix to use the virtual mailbox domain mapping
+  command: posfconf virual_mailbox_domains=mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
+
+- name: define Postfix virtual mailbox mapping
+  template: src=mysql-virtual-mailbox-maps.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-maps.cf
+  notify: restart postfix
+
+- name: tell Postfix to use the virtual mailbox mapping
+  command: posfconf virual_mailbox_maps=mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
+
+- name: define Postfix virtual alias mapping
+  template: src=mysql-virtual-alias-maps.cf.j2 dest=/etc/postfix/mysql-virtual-alias-maps.cf
+  notify: restart postfix
+
+- name: tell Postfix to the virtual alias mapping
+  command: posfconf virual_alias_maps=mysql:/etc/postfix/mysql-virtual-alias-maps.cf
+
+- name: define Postfix email-to-email mapping (required for catchall domains)
+  template: src=mysql-email2email.cf.j2 dest=/etc/postfix/mysql-email2email.cf
+  notify: restart postfix
+
+- name: tell Postfix use email-to-email mapping
+  command: posfconf virual_alias_maps=mysql:/etc/postfix/mysql-virtual-alias-maps,mysql:/etc/postfix/mysql-email2email.cf
+
+
