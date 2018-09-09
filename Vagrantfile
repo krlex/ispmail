@@ -66,10 +66,10 @@ Vagrant.configure("2") do |config|
   # config.vm.provision "shell", inline: <<-SHELL
   #   apt-get update
   #   apt-get install -y apache2
+  config.vm.provision "ansible" do |ansible|
   # SHELL
-   config.vm.provision "ansible" do |ansible|
      ansible.playbook = "ispmail.yml"
-     ansible.sudo = true
+     ansible.become = true
      #ansible.verbose = 'vvv'
    end
 

@@ -38,6 +38,6 @@
   #- name: set the MySQL  root's password
   # mysql_user: name=root password={{ispmail_mysql_root_password}} state=present
 
-  # - name: Create root's .my.cnf
-  # template: src=my-cnf.j2 dest=/root/.my.cnf mode=0600
+- name: Create root's .my.cnf
+  template: src=my-cnf.j2 dest=/root/.my.cnf mode=0600
 
