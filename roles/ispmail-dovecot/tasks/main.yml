@@ -10,15 +10,23 @@
   file: path=/var/vmail state=directory owner=vmail group=vmail
 
 - name: Allow Login authentication method for Outlook clients
-  lineinfile: dest=/etc/dovecot/conf.d/10-auth.conf regexp='^auth_mechanisms =' line='auth_mechanisms = {{ispmail_dovecot_auth_mechanisms}}' backrefs=yes
+  lineinfile: dest=/etc/dovecot/conf.d/10-auth.conf regexp='^auth_mechanisms=' line='auth_mechanisms={{ispmail_dovecot_auth_mechanisms}}' backrefs=yes
   notify: restart dovecot
 
 - name: Disabling system authentication
-  lineinfile: dest=/etc/dovecot/conf.d/10-auth.conf regexp='^!include auth-system.conf.ext' line='#!include auth-system.conf.ext' backrefs=yes
-  notify:restart dovecot
+  lineinfile:
+    dest: /etc/dovecot/conf.d/10-auth.conf
+    regexp: '^!include auth-system.conf.ext'
+    line: '#!include auth-system.conf.ext'
+    backrefs: yes
+  notify: restart dovecot
 
 - name: Enabling SQL-based authentication
-  lineinfile: dest=/etc/dovecot/conf.d/10-auth.conf regexp='^\#!include auth-system.conf.ext' line='!include auth-sql.conf.ext' backrefs=yes
+  lineinfile:
+    dest: /etc/dovecot/conf.d/10-auth.conf
+    regexp: '^\#!include auth-sql.conf.ext'
+    line: '!include auth-sql.conf.ext'
+    backrefs: yes
   notify: restart dovecot
 
 - name: Copying SQL authentication configuration (auth-sql.conf.ext)

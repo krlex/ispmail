@@ -1,7 +1,9 @@
 ---
 
 - name: Install required binary packages
-  apt: name={{item}} state=instaled
+  apt:
+    name:{{item}}
+    state:installed
   with_items:
     - apache2
     - libapache2-mod-php5
@@ -9,17 +11,23 @@
   notify: restart apache
 
 - name: Create Apache vhost config for HTTPS (ROUNDCUBE and phpmyadmin)
-  template: src=webmail.conf-433.j2 dest=/etc/apache2/sites-available/default-ssl.conf
-  notify:restart apache2
+  template:
+    src: webmail.conf-433.j2
+    dest: /etc/apache2/sites-available/default-ssl.conf
+  notify: restart apache2
 
 - name: Enable Apache vhost for HTTPS
-  command: /usr/sbin/a2ensite default-ssl creates=/etc/apache2/sites-enabled/default-ssl.conf
+  command: /usr/sbin/a2ensite default-ssl
+  creates: /etc/apache2/sites-enabled/default-ssl.conf
   notify: restart apache
 
 - name: Create Apache vhost config for HTTPS (redirect to HTTPS)
-  template: src=webmail.conf-80.j2 dest=/etc/apache2/sites-available/000-default.conf
+  template:
+    src: webmail.conf-80.j2
+    dest: /etc/apache2/sites-available/000-default.conf
   notify: restart apache
 
 - name: Enable Apache SSL module
-  command: /usr/sbin/a2enmod ssl creates=/etc/apache2/mods-enabled/ssl.conf
+  command: /usr/sbin/a2enmod ssl
+  creates: /etc/apache2/mods-enabled/ssl.conf
   notify: restart apache

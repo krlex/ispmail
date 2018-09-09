@@ -12,5 +12,5 @@
   args:
     creates: /etc/ssl/certs/mailserver.pem
 
-- name:e Restrict access permission of the private key
+- name: Restrict access permission of the private key
   file: path=/etc/ssl/private/mailserver.pem mode=0640
