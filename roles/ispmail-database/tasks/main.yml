@@ -3,8 +3,8 @@
 - name: Installing required Python mysqldb module for Ansible to manage databases
   apt: pkg=python-mysqldb state=installed
 
-  #- name: Create my-cnf for root user
-  #  template: src=root-my-cnf.j2 dest=/root/.my.cnf mode=0600
+- name: Create my-cnf for root user
+  template: src=my-cnf.j2 dest=/root/.my.cnf mode=0600
 
 - name: create mailserver MySQL database
   mysql_db: name=mailserver state=present
