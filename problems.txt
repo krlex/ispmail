@@ -1,0 +1,3 @@
+- syntax MySQL
+- passwords variables
+- not installing packages
