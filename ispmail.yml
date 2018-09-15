@@ -1,8 +1,8 @@
 ---
-
-- hosts: all
+- name: Provision Starting line
+  hosts: all
   roles:
-    #- dumpvars
+    - dumpvars
     - ispmail-packages
     - ispmail-certificate
     - ispmail-database

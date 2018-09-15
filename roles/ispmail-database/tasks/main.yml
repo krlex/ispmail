@@ -3,7 +3,7 @@
 - name: Installing required Python mysqldb module for Ansible to manage databases
   apt:
     pkg: python-mysqldb
-    state: installed
+    state: present
 
 - name: Create my-cnf for root user
   template:
