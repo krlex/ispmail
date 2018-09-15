@@ -38,19 +38,15 @@
 - name: creating MySQL user to read the mailserver database
   mysql_user:
     name: mailuser
-    password:{{ispmail_mysql_mailuser_password}}
-    priv:{{item}}
-    with_items:
-      - "mailserver.*:SELECT,INSERT,UPDATE,DETELE"
+    password: password
+    priv: "*.*:SELECT,INSERT,UPDATE,DETELE"
     state: present
 
 - name: creatin user for Roundcube
   mysql_user:
     name: roundcube
-    password:{{ispmail_mysql_mailuser_password}}
-    priv:{{item}}
-    with_items:
-      - "roundcube.*:ALL"
+    password: password
+    priv: "*.*:ALL"
     state: present
 
 - name: copying MySQL test data to server
