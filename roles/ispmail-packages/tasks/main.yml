@@ -2,8 +2,8 @@
 
 - name: install required binary packages
   apt:
-    state: present
-    name:{{item}}
+    name: "{{item}}"
+    state: installed
     update_cache: yes
   with_items:
     - mysql-server
@@ -23,9 +23,9 @@
 
 - name: purge Exim installation
   apt:
-    name:{{it}}
-    state: absent
-    purge:yes
+    name: "{{ item }}"
+    state: installed
+    purge: yes
   with_items:
     - exim4
     - exim4-base
@@ -33,7 +33,7 @@
     - exim4-daemon-light
 
 - name: make sure mysql-server is started
-  apt:
+  service:
     name: mysql
     enabled: yes
     state: started

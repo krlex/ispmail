@@ -6,11 +6,13 @@
     -nodes -sha512 -x509
     -days {{ ispmail_certificate_days_valid }}
     -nodes
-    -subj "/C={{ ispmail_certificate_country  }}/ST={{ ispmail_certificate_state }}/L={{ ispmail_certificate_location }}/O={{ ispmail_certificate_organistation }}/OU={{ ispmail_certificate_orgunit }}{% for domain in ispmail_certificate_domain %}/CN={{ domain }}{% endfor %}/emailAddress={{ ispmail_certificate_email }}"
+    -subj "/C={{ ispmail_certificate_country }}/ST={{ ispmail_certificate_state }}/L={{ ispmail_certificate_location }}/O={{ ispmail_certificate_organistation }}/OU={{ ispmail_certificate_orgunit }}{% for domain in ispmail_certificate_domain %}/CN={{ domain }}{% endfor %}/emailAddress={{ ispmail_certificate_email }}"
     -out /etc/ssl/certs/mailserver.pem
     -keyout /etc/ssl/private/mailserver.pem
   args:
     creates: /etc/ssl/certs/mailserver.pem
 
 - name: Restrict access permission of the private key
-  file: path=/etc/ssl/private/mailserver.pem mode=0640
+  file:
+    path: /etc/ssl/private/mailserver.pem
+    mode: 0640
