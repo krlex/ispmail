@@ -1,39 +1,36 @@
 ---
-
 - name: define Postfix virtual mailbox domain mapping
   template: src=mysql-virtual-mailbox-domains.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-domains.cf
   notify: restart postfix
-
 - name: tell Postfix to use the virtual mailbox domain mapping
   command: postconf virtual_mailbox_domains=mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
 
 - name: define Postfix virtual mailbox mapping
   template: src=mysql-virtual-mailbox-maps.cf.j2 dest=/etc/postfix/mysql-virtual-mailbox-maps.cf
   notify: restart postfix
-
 - name: tell Postfix to use the virtual mailbox mapping
   command: postconf virtual_mailbox_maps=mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
 
 - name: define Postfix virtual alias mapping
   template: src=mysql-virtual-alias-maps.cf.j2 dest=/etc/postfix/mysql-virtual-alias-maps.cf
   notify: restart postfix
-
-- name: tell Postfix to the virtual alias mapping
+- name: tell Postfix to use the virtual alias mapping
   command: postconf virtual_alias_maps=mysql:/etc/postfix/mysql-virtual-alias-maps.cf
 
 - name: define Postfix email-to-email mapping (required for catchall domains)
   template: src=mysql-email2email.cf.j2 dest=/etc/postfix/mysql-email2email.cf
   notify: restart postfix
-
-- name: tell Postfix use email-to-email mapping
-  command: postconf virtual_alias_maps=mysql:/etc/postfix/mysql-virtual-alias-maps,mysql:/etc/postfix/mysql-email2email.cf
+- name: tell Postfix to use the email-to-email mapping
+  command: postconf virtual_alias_maps=mysql:/etc/postfix/mysql-virtual-alias-maps.cf,mysql:/etc/postfix/mysql-email2email.cf
 
 - name: Restricting access to database mapping files that contain a password
-  file: path=/etc/postfix/myql-{{item}}.cf mode=0640
+  file:
+    path: /etc/postfix/mysql-{{item}}.cf
+    mode: 0640
   with_items:
-    - virtual-mailbox-domains
-    - virtual-mailbox-maps
-    - virtual-alias-maps
+  - virtual-mailbox-domains
+  - virtual-mailbox-maps
+  - virtual-alias-maps
 
 - name: Make Postfix use LMTP to send emails to Dovecot
   command: postconf virtual_transport=lmtp:unix:private/dovecot-lmtp
@@ -44,7 +41,7 @@
 - name: Setting SMTP authentication type to dovecot
   command: postconf smtpd_sasl_type=dovecot
 
-- name: Setting SMTP authentication type path/socket
+- name: Setting SMTP authentication path/socket
   command: postconf smtpd_sasl_path=private/auth
 
 - name: Enabling SMTP authentication
@@ -65,24 +62,28 @@
 - name: Set TLS encryption key
   command: postconf smtpd_tls_key_file=/etc/ssl/private/mailserver.pem
 
-- name: Copying patch for Debian bug 739738
-  copy: src=spamassassin.patch dest=/tmp/spamassassin.patch
-
-- name: Patching Debian bug 739738
-  patch: src=/tmp/spamassassin.patch strip=0 basedir=/ remote_src=True
+  #- name: Copying patch for Debian bug 739738
+  #  copy: src=spamassassin.patch dest=/tmp/spamassassin.patch
+  #
+  #- name: Patching Debian bug 739738
+  #  patch: src=/tmp/spamassassin.patch strip=0 basedir=/ remote_src=True
 
 - name: Enabling Spamassassin milter
-  command: postconf smtp_milters=unix:/spamass/spamass.sock
+  command: postconf smtpd_milters=unix:/spamass/spamass.sock
 
 - name: Configuring Spamassassin milter
   command: postconf milter_connect_macros="i j {daemon_name} v {if_name} _"
 
 - name: Setting spamd options
-  copy: src=etc-default-spamassassin dest=/etc/default/spamassassin
+  copy:
+    src: etc-default-spamassassin
+    dest: /etc/default/spamassassin
   notify: restart spamassassin
 
-- name: Add user spamass-milter to debian-spamd group
-  user: name=spamass-milter group=debian-spamd
+- name: Adding user spamass-milter to debian-spamd group
+  user:
+    name: spamass-milter
+    groups: debian-spamd
   notify: restart spamassassin
 
 - name: Enabling spamd at startup
