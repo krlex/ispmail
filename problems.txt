@@ -1,2 +1,1 @@
-- syntax MySQL
-- passwords variables
+- config.php error
